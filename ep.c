@@ -1,5 +1,8 @@
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <stdio.h>
 
 int main(int argc, char **argv) {
     if (argc <= 1) {
@@ -16,7 +19,10 @@ int main(int argc, char **argv) {
     }
     _argv[argc - 1] = 0;
 
-    execv(_argv[0], _argv);
+    execvp(_argv[0], _argv);
 
-    return 255;
+    int err = errno;
+    fprintf(stderr, "Failed to run command \"%s\": %s\n", _argv[0], strerror(err));
+
+    return err;
 }
